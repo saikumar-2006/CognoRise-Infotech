@@ -1,0 +1,163 @@
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Book class with attributes title, author, and status (checked out or available)
+class Book {
+    private String title;
+    private String author;
+    private boolean isAvailable;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+        this.isAvailable = true; // New books are available by default
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    @Override
+    public String toString() {
+        String availability = isAvailable ? "Available" : "Checked out";
+        return "Title: " + title + ", Author: " + author + ", Status: " + availability;
+    }
+}
+
+// LibraryCatalog class to manage the list of books
+class LibraryCatalog {
+    private ArrayList<Book> books;
+
+    public LibraryCatalog() {
+        books = new ArrayList<>();
+    }
+
+    // Method to add a new book
+    public void addBook(String title, String author) {
+        Book newBook = new Book(title, author);
+        books.add(newBook);
+        System.out.println("Book added successfully!");
+    }
+
+    // Method to search for books by title
+    public void searchByTitle(String title) {
+        boolean found = false;
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                System.out.println(book);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found with the title \"" + title + "\".");
+        }
+    }
+
+    // Method to search for books by author
+    public void searchByAuthor(String author) {
+        boolean found = false;
+        for (Book book : books) {
+            if (book.getAuthor().equalsIgnoreCase(author)) {
+                System.out.println(book);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found by author \"" + author + "\".");
+        }
+    }
+
+    // Method to check out a book
+    public void checkOutBook(String title) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title) && book.isAvailable()) {
+                book.setAvailable(false);
+                System.out.println("You have checked out the book \"" + title + "\".");
+                return;
+            }
+        }
+        System.out.println("The book \"" + title + "\" is either not available or already checked out.");
+    }
+
+    // Method to return a book
+    public void returnBook(String title) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title) && !book.isAvailable()) {
+                book.setAvailable(true);
+                System.out.println("You have returned the book \"" + title + "\".");
+                return;
+            }
+        }
+        System.out.println("The book \"" + title + "\" is not currently checked out.");
+    }
+}
+
+// Main class to interact with the library system
+public class LibraryManagementSystem {
+    public static void main(String[] args) {
+        LibraryCatalog catalog = new LibraryCatalog();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nLibrary Management System:");
+            System.out.println("1. Add Book");
+            System.out.println("2. Search by Title");
+            System.out.println("3. Search by Author");
+            System.out.println("4. Check Out Book");
+            System.out.println("5. Return Book");
+            System.out.println("6. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter book title: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Enter book author: ");
+                    String author = scanner.nextLine();
+                    catalog.addBook(title, author);
+                    break;
+                case 2:
+                    System.out.print("Enter title to search: ");
+                    String searchTitle = scanner.nextLine();
+                    catalog.searchByTitle(searchTitle);
+                    break;
+                case 3:
+                    System.out.print("Enter author to search: ");
+                    String searchAuthor = scanner.nextLine();
+                    catalog.searchByAuthor(searchAuthor);
+                    break;
+                case 4:
+                    System.out.print("Enter the title of the book to check out: ");
+                    String checkOutTitle = scanner.nextLine();
+                    catalog.checkOutBook(checkOutTitle);
+                    break;
+                case 5:
+                    System.out.print("Enter the title of the book to return: ");
+                    String returnTitle = scanner.nextLine();
+                    catalog.returnBook(returnTitle);
+                    break;
+                case 6:
+                    System.out.println("Exiting Library Management System. Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
